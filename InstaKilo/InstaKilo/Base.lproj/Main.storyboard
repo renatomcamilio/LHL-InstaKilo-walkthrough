@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pLp-Sn-j6B">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pLp-Sn-j6B">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Photos Collection View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="PhotosCollectionViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -19,6 +19,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="p82-fJ-KGD">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
                                 <color key="backgroundColor" red="0.60435888784734748" green="0.68230341046880894" blue="0.7627051767676768" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="p7i-Dn-UMx">
                                     <size key="itemSize" width="50" height="50"/>
@@ -27,7 +28,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="q6O-WH-jWg" customClass="MyCollectionViewCell">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCollectionViewCell" id="q6O-WH-jWg" customClass="PhotoCollectionViewCell">
                                         <rect key="frame" x="0.0" y="114" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -36,10 +37,13 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jpa-or-B9l">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <animations/>
                                                 </imageView>
                                             </subviews>
+                                            <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <animations/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="jpa-or-B9l" secondAttribute="trailing" id="IyT-tq-Via"/>
                                             <constraint firstAttribute="bottom" secondItem="jpa-or-B9l" secondAttribute="bottom" id="PMW-QK-Wan"/>
@@ -47,13 +51,32 @@
                                             <constraint firstItem="jpa-or-B9l" firstAttribute="leading" secondItem="q6O-WH-jWg" secondAttribute="leading" id="V1J-Rx-4HT"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="photoImageCell" destination="jpa-or-B9l" id="rst-sU-Flg"/>
+                                            <outlet property="imageView" destination="jpa-or-B9l" id="o7n-U5-5fr"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sectionTitle" id="6yP-zt-4GY">
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoGroupHeaderCollectionReusableView" id="6yP-zt-4GY" customClass="PhotoGroupHeaderCollectionReusableView">
                                     <rect key="frame" x="0.0" y="64" width="600" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M4d-e5-G8s">
+                                            <rect key="frame" x="8" y="8" width="584" height="34"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <animations/>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="M4d-e5-G8s" secondAttribute="trailing" constant="8" id="8Jv-1K-KDJ"/>
+                                        <constraint firstItem="M4d-e5-G8s" firstAttribute="top" secondItem="6yP-zt-4GY" secondAttribute="top" constant="8" id="E3r-sx-5SC"/>
+                                        <constraint firstItem="M4d-e5-G8s" firstAttribute="leading" secondItem="6yP-zt-4GY" secondAttribute="leading" constant="8" id="S7C-7n-6zR"/>
+                                        <constraint firstAttribute="bottom" secondItem="M4d-e5-G8s" secondAttribute="bottom" constant="8" id="jAx-TB-0el"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="titleLabel" destination="M4d-e5-G8s" id="ABI-Bt-Kvy"/>
+                                    </connections>
                                 </collectionReusableView>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="yKG-yi-AVX"/>
@@ -61,6 +84,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="p82-fJ-KGD" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="4XI-iZ-dE7"/>
@@ -74,17 +98,19 @@
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="qCG-8M-4Hd">
                             <rect key="frame" x="180" y="7" width="240" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <animations/>
                             <segments>
                                 <segment title="Location"/>
                                 <segment title="Subject"/>
                             </segments>
                             <connections>
-                                <action selector="filterSelector:" destination="BYZ-38-t0r" eventType="valueChanged" id="oBL-Cw-r9V"/>
+                                <action selector="photoGroupTypeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="qsZ-4H-J5I"/>
                             </connections>
                         </segmentedControl>
                     </navigationItem>
                     <connections>
                         <outlet property="photoCollectionView" destination="p82-fJ-KGD" id="zZA-Wn-vDL"/>
+                        <outlet property="photoGroupTypeSegmentedControl" destination="qCG-8M-4Hd" id="orx-wd-jpq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -99,6 +125,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KCx-dL-wa5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
