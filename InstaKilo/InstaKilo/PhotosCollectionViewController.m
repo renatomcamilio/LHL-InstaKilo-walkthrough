@@ -14,16 +14,30 @@
 @interface PhotosCollectionViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *photoList;
-@property (nonatomic, assign) PhotoGroupType photoGroupType;
+// list of Photos object to populate photoCollectionView
+
 @property (nonatomic, strong) NSMutableOrderedSet *photoLocations;
 @property (nonatomic, strong) NSMutableOrderedSet *photoSubjects;
+// both photoLocations and photoSubjects are mutable Sets that store unique locations and
+// subjects respectively, and will be useful for grouping information together later on
+
 @property (nonatomic, weak) IBOutlet UISegmentedControl *photoGroupTypeSegmentedControl;
+// this segmented control is the user interface to change the photoCollectionView grouping
+
 @property (weak, nonatomic) IBOutlet UICollectionView *photoCollectionView;
 
 @end
 
 @implementation PhotosCollectionViewController
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    _photoLocations = [NSMutableOrderedSet orderedSet];
+    _photoSubjects = [NSMutableOrderedSet orderedSet];
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,17 +53,19 @@
     Photo *image9 = [[Photo alloc] initWithImage:[UIImage imageNamed:@"bcplace.jpg"] location:@"world" subject:@"travel"];
     Photo *image10 = [[Photo alloc] initWithImage:[UIImage imageNamed:@"luxuryhome.jpg"] location:@"vancouver" subject:@"interests"];
   
+    // populate photoList with initial data
     self.photoList = [NSMutableArray arrayWithArray:@[image1, image2, image3, image4, image5, image6, image7, image8, image9, image10]];
     
-    self.photoLocations = [NSMutableOrderedSet orderedSet];
-    self.photoSubjects = [NSMutableOrderedSet orderedSet];
-    
-    // updates locations
+    // initial update of subjects and locations (essentially extracting unique locations and subjects)
     [self updatePhotoLocations];
     [self updatePhotoSubjects];
 }
 
+#pragma mark - Group Type Segmented Control
+
 - (IBAction)photoGroupTypeChanged:(id)sender {
+    // based on `PhotoGroupType` enum we can use `switch` statements to find out
+    // which option is selected on the `photoGroupTypeSegmentedControl`
     switch (self.photoGroupTypeSegmentedControl.selectedSegmentIndex) {
         case PhotoGroupTypeLocation:
             [self updatePhotoLocations];
@@ -105,6 +121,13 @@
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        
+        // IMPORTANT: you might have trouble using the UICollectionReusableView directly,
+        // it's recommended you subclass it and use it instead of the UICollectionReusableView
+        // itself.
+        // Docs from Apple:
+            // OverviewSubclassing Notes (UICollectionReusableView)
+            // This class is intended to be subclassed. Most methods defined by this class have minimal or no implementations. You are not required to override any of the methods but can do so in cases where you want to respond to changes in the view’s usage or layout.
         PhotoGroupHeaderCollectionReusableView *collectionReusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:NSStringFromClass([PhotoGroupHeaderCollectionReusableView class]) forIndexPath:indexPath];
         
         switch (self.photoGroupTypeSegmentedControl.selectedSegmentIndex) {
@@ -145,19 +168,23 @@
 
 #pragma mark - Photo Locations
 
+// extract all the unique photo locations and assign to `photoLocations` property
+// the data structure is pretty much like an Array of locations*:
+// @[@"vancouver", @"toronto", @"montreal"...]
+// *Note: it's actually a NSMutableOrderedSet, which is like an array of unique values
 - (void)updatePhotoLocations {
-    // extract all the unique photo locations
     for (Photo *photo in self.photoList) {
-        // does `self.photoLocations` contain `photo.location`?
-        // if not, add object `photo.location` to `self.photoLocations` list
-        // other than that, ignore
-        
-        // Note: ^ (since we are using NSMudatableOrderedSet, which is a Set Subclass,
+        // we would check if `self.photoLocations` contain `photo.location`, and,
+        // if not, add object `photo.location` to `self.photoLocations`
+        // (but since we are using NSMudatableOrderedSet, which is a Set Subclass,
         // it eliminates duplicates for us)
         [self.photoLocations addObject:photo.location];
     }
 }
 
+// group photos by location
+// the data structure will be a Dictionary with Arrays of Photo Objects:
+// @{ @"vancouver": @[image1, image2], @"toronto": @[image3, image5], @"montreal": @[image4] }
 - (NSDictionary *)photoListGroupedByLocation {
     NSMutableDictionary *groupedPhotos = [NSMutableDictionary dictionary];
     
@@ -176,19 +203,23 @@
 
 #pragma mark - Photo Subjects
 
+// extract all the unique photo subjects and assign to `photoSubjects` property
+// the data structure is pretty much like an Array of subjects*:
+// @[@"holiday", @"weekend", @"interests"...]
+// *Note: it's actually a NSMutableOrderedSet, which is like an array of unique values
 - (void)updatePhotoSubjects {
-    // extract all the unique photo subjects
     for (Photo *photo in self.photoList) {
-        // does `self.photoSubjects` contain `photo.subject`?
-        // if not, add object `photo.subject` to `self.photoSubjects` list
-        // other than that, ignore
-        
-        // Note: ^ (since we are using NSMudatableOrderedSet, which is a Set Subclass,
+        // we would check if `self.photoSubjects` contain `photo.subject`, and,
+        // if not, add object `photo.subject` to `self.photoSubjects`
+        // (but since we are using NSMudatableOrderedSet, which is a Set Subclass,
         // it eliminates duplicates for us)
         [self.photoSubjects addObject:photo.subject];
     }
 }
 
+// group photos by subject
+// the data structure will be a Dictionary with Arrays of Photo Objects:
+// @{ @"interests": @[image1, image2], @"holiday": @[image3, image5], @"weekend": @[image4] }
 - (NSDictionary *)photoListGroupedBySubject {
     NSMutableDictionary *groupedPhotos = [NSMutableDictionary dictionary];
     
